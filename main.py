@@ -16,9 +16,8 @@ while True:
 
     cv2.imshow("Webcam feed", frame)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):       #Pressing 'q' to quit
+    if cv2.waitKey(1) & 0xFF == ord('q'):       #Pressing 'q' to quit and ord() will convert char 'q' into its ASCII value
         break
 
 cam.release()
 cv2.destroyAllWindows()
-    
