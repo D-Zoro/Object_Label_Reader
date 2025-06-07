@@ -1,4 +1,9 @@
 import cv2
+import pyttsx3
+
+#initialize text-to-speech engine 
+engine = pyttsx3.init()
+
 
 #Load class Labels
 classNames = [
@@ -21,6 +26,9 @@ if not cam.isOpened():
     print("Error:could not open the webcam")
     exit()
 
+# To avoid speakingof same object repeatedly
+spoken_labels = set()    
+
 while True:
     ret, frame = cam.read()    #To capture frame by frame 
 
@@ -38,7 +46,7 @@ while True:
     for i in range(detections.shape[2]):
         confidence = detections[0, 0, i, 2]
 
-        if confidence > 0.5:
+        if confidence > 0.6:                  # higher threshold to reduce the noise
             idx = int(detections[0, 0, i, 1])
             label = classNames[idx]
 
@@ -48,8 +56,13 @@ while True:
             cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 255, 0), 2)
             cv2.putText(frame, label, (startX, startY - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            # speak of new objects 
+            if label not in spoken_labels:
+                engine.say(label)
+                engine.runAndWait()
+                spoken_labels.add(label)
 
-    cv2.imshow("Object Detection", frame)
+    cv2.imshow("Talking object detector", frame)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):       #Pressing 'q' to quit and ord() will convert char 'q' into its ASCII value
         break
