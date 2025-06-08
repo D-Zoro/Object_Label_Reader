@@ -1,5 +1,10 @@
 import cv2
 import pyttsx3
+import pytesseract
+import os
+
+#tesseract path
+pytesseract.pytesseract.tesseract_cmd = r""C:\Users\Arun JH\Downloads\tesseract-ocr-w64-setup-5.5.0.20241111.exe""
 
 #initialize text-to-speech engine 
 engine = pyttsx3.init()
@@ -26,7 +31,7 @@ if not cam.isOpened():
     print("Error:could not open the webcam")
     exit()
 
-# To avoid speakingof same object repeatedly
+# To avoid speaking of same object repeatedly
 spoken_labels = set()    
 
 while True:
@@ -62,8 +67,15 @@ while True:
                 engine.runAndWait()
                 spoken_labels.add(label)
 
-    cv2.imshow("Talking object detector", frame)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    text = pytesseract.image_to_string(gray)
 
+    if text.strip():  # check if text is not empty 
+        print("Text Detected:",text.stip())
+        engine.say("reading text:", text.stip())
+        engine.runAndWait()
+
+    cv2.imshow("AI reader:",frame)    
     if cv2.waitKey(1) & 0xFF == ord('q'):       #Pressing 'q' to quit and ord() will convert char 'q' into its ASCII value
         break
 
