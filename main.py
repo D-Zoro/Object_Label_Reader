@@ -4,7 +4,8 @@ import pytesseract
 import os
 
 #tesseract path
-pytesseract.pytesseract.tesseract_cmd = r""C:\Users\Arun JH\Downloads\tesseract-ocr-w64-setup-5.5.0.20241111.exe""
+pytesseract.pytesseract.tesseract_cmd = r"C:\Users\Arun JH\Desktop\VAIBHAVI\tesseract.exe"
+
 
 #initialize text-to-speech engine 
 engine = pyttsx3.init()
@@ -71,8 +72,8 @@ while True:
     text = pytesseract.image_to_string(gray)
 
     if text.strip():  # check if text is not empty 
-        print("Text Detected:",text.stip())
-        engine.say("reading text:", text.stip())
+        print("Text Detected:",text.strip())
+        engine.say("reading text:", text.strip())
         engine.runAndWait()
 
     cv2.imshow("AI reader:",frame)    
