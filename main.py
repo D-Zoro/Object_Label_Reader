@@ -1,7 +1,13 @@
 import cv2
 import pyttsx3
 import pytesseract
+from gtts import gTTS
 import os
+import time
+
+#function to speak using gTTS
+
+
 
 #tesseract path
 pytesseract.pytesseract.tesseract_cmd = r"C:\Users\Arun JH\Desktop\VAIBHAVI\tesseract.exe"
@@ -70,11 +76,25 @@ while True:
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     text = pytesseract.image_to_string(gray)
+    cleaned_text = ' '.join(text.strip().split())
 
-    if text.strip():  # check if text is not empty 
-        print("Text Detected:",text.strip())
-        engine.say("reading text:", text.strip())
-        engine.runAndWait()
+
+    def speak_text_gtts(text):
+
+        try:
+            tts= gTTS(text=text, lang='en')
+            filename = "temp.mp3"
+            tts.save(filename)
+            os.system(f"start {filename}")
+            time.sleep(2)  # wait for audioto play before continuing 
+        except Exception as e:
+            print("speech error:", e)  
+
+
+    if cleaned_text and len(cleaned_text) > 5:
+
+        print("Speaking:", cleaned_text)
+        speak_text_gtts("The text says: " + cleaned_text)
 
     cv2.imshow("AI reader:",frame)    
     if cv2.waitKey(1) & 0xFF == ord('q'):       #Pressing 'q' to quit and ord() will convert char 'q' into its ASCII value
